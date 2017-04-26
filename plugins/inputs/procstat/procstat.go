@@ -92,6 +92,16 @@ func (p *Procstat) addMetrics(proc Process, acc telegraf.Accumulator) {
 
 	fields := map[string]interface{}{}
 
+    // PATCH
+    // if the name is Cmdline replace it with the value of proc.Cmdline()
+	if tag, _ := proc.Tags()["process_name"]; tag == "Cmdline" {
+		name, err := proc.CmdLine()
+		if err == nil {
+            proc.Tags()["process_name"] = name
+		}
+    }
+    // PATCH
+
 	//If process_name tag is not already set, set to actual name
 	if _, nameInTags := proc.Tags()["process_name"]; !nameInTags {
 		name, err := proc.Name()
