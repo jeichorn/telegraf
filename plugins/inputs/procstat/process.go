@@ -11,6 +11,7 @@ import (
 type Process interface {
 	PID() PID
 	Tags() map[string]string
+    CmdLine() (string, error)
 
 	IOCounters() (*process.IOCountersStat, error)
 	MemoryInfo() (*process.MemoryInfoStat, error)
@@ -61,6 +62,11 @@ func (p *Proc) PID() PID {
 
 func (p *Proc) Username() (string, error) {
 	return p.Process.Username()
+}
+
+func (p *Proc) CmdLine() (string, error) {
+    name, err := p.Process.Cmdline()
+    return name, err
 }
 
 func (p *Proc) Percent(interval time.Duration) (float64, error) {
